@@ -1,0 +1,66 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    background: linear-gradient(90deg, rgba(217,43,198,0.5) 0%,
+                                    rgba(255,145,0,0.5) 35%,
+                                    rgba(245,182,73,0.5) 61%,
+                                    rgba(217,43,198,0.5) 83%,
+                                        rgba(255,145,0,0.5) 100%);
+ 
+    background-size: cover;
+    font-family: sans-serif;
+}
+#wrapper{
+    max-width: 1200px;
+    margin: auto;
+}
+
+#wrapper>section{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.joueur{
+    padding: 1em;
+}
+
+#grid{
+    width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.cell{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #aaa;
+    text-align: center;
+    line-height: 200px;
+    font-size: 7em;
+}
+#joueur1{
+    background: transparent url(img/goku.jpg) no-repeat bottom left;
+
+    background-size: contain;
+    color: rgb(15, 5, 58);
+    font-size: 1.5em;
+    
+}
+#joueur2{
+    background: transparent url(img/kakshi.jpeg) no-repeat bottom left;
+  
+    color: rgb(37, 6, 216);
+    font-size: 1.5em;
+}
+#message{
+    font-size: 1.5em;
+    text-align: center;
+    
+}
+#message>a{
+    text-decoration: none;
+    color: darkred;
+}
+.highlight{
+    background-color: yellow;
+}

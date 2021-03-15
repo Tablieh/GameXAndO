@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Morpion</title>
+</head>
+<body>
+    <div id="wrapper">
+        <section>
+            <div id="joueur1" class="joueur">
+                <h1>goku X</h1>
+            </div>
+            <div id="grid">
+                <div class="cell" data-coord="1-1"></div>
+                <div class="cell" data-coord="1-2"></div>
+                <div class="cell" data-coord="1-3"></div>
+                <div class="cell" data-coord="2-1"></div>
+                <div class="cell" data-coord="2-2"></div>
+                <div class="cell" data-coord="2-3"></div>
+                <div class="cell" data-coord="3-1"></div>
+                <div class="cell" data-coord="3-2"></div>
+                <div class="cell" data-coord="3-3"></div>
+            </div>
+            <div id="joueur2" class="joueur">
+                <h1> kakshi O</h1>
+            </div>
+        </section>
+        <p id="message">
+            <span></span>
+            <button id="newGame">Try Again</button>
+        </p>
+
+        
+    </div>
+    <script>
+        //install the objet in classe to easy writing
+        class player{
+                                                    //3 install of variable(objet) in our classe wich is player
+            constructor(symbol, name ,elem){
+                                                    //this same like php this symbol of symbol player is the same from the symbol in the parmaitre
+                                                    //this same like php this name of name player is the same from the name in the parmaitre
+                this.symbol = symbol
+                this.name = name
+                                                    //variable for score cus its start bay 0 no need to pur in paramaitre
+                this.score = 0
+                                                    // variable for element
+                this.elem = elem
+                                                    //call this display and we have no need anymore to call diplay every time
+                this.display(elem)
+                }
+            incrementScore(){
+                this.score++
+                this.display()
+            }
+                                                    //color on each player turn
+            highlight(){
+                document.querySelector("#joueur1").classList.remove("highlight")
+                document.querySelector("#joueur2").classList.remove("highlight")
+                document.querySelector(this.elem).classList.add("highlight")
+            }
+                                                    //methode to display name + score
+            display(elem){
+                                                    //attention pls this way is used like the (concatenation classique)
+                let html= `<h2>${this.name}</h2><h3> score : ${this.score}</h3>`
+                document.querySelector(this.elem).innerHTML = html
+            }
+        }
+                                                        //hay lets install th variable around so we can use it later
+                                                        // 2 variable for players
+        /* the player*/
+        let player1 = new player("X", "son-goku","#joueur1")
+        let player2 = new player("O","hataki-kakachi","#joueur2")
+                                                        // variable for first player the same who help us sweep the players
+        let currentPlayer = player1
+                                                        // variable for fuction for if his defult is false its the variable who help us to know the the game stell going 
+                                                        // variable for the clicker each time he count for us 
+                                                        /* vaiable of the parti one*/
+        let gameOver , countClicks 
+                                                        // 2 variable one for all the case the box of boxes that we play in 
+                                                        // and the secound variable to install the messages from our messegas bom you win bom match null etc..
+                                                        /* the elements of the DOM needed to play*/
+        let cells = document.querySelectorAll(".cell")
+        let message = document.querySelector("#message span")
+                                                        //same logic for button of reblay
+        let replayBtn = document.querySelector("#newGame")
+                                                        //call my init 
+                                                        /* we start the secound parti etc etc ..*/
+        init()
+                                                        //when we click ,the score dont make it zero in difulte
+        replayBtn.addEventListener("click", init)
+                                                        // boucleOf for the click and it take us to fuction handelClick 
+        for (let cell of cells) {
+            cell.addEventListener("click", () => handleClick(cell))
+        }
+                                                        //function to limet the event replayBtn less text upstare same logic with handilClick
+        function init() {
+            gameOver = false
+             countClicks = 0
+            for (let cell of cells) {
+                cell.innerHTML = ""
+            }
+                                                         //to refliche the massege from old to new and say message its your turn m..f..
+            message.innerHTML = "The turn of " + currentPlayer.name
+        }
+                                                        // fuction handel click 
+                                                        // he caount the click each time and he gose to contion suivant :
+        function handleClick(cell){
+            countClicks++
+                                                        // first condition if the case is empty ((and)) the variable gameOver is false (variable who help us to know the the game stell going if he stay false the game is on)
+            if(cell.textContent == "" && gameOver == false){
+                                                        // we add player who playes each time 
+                cell.innerHTML = currentPlayer.symbol
+                                                        // secound condition take us to fuction isVictory
+                if(isVictory()){
+                                                        // if the condtion is true it we end the game bay change the vaiable gameOver (variable who help us to know the the game stell going in this case no the game end here)
+                    gameOver = true
+                                                        //if some one win we add the score 
+                                                        //then we ubdate the massege on screen
+                    currentPlayer.incrementScore()
+                                                        // we add message to our variable message us there and we say congrate the winner currentPlayer(the one who has play last and win)
+                    message.innerHTML  = "GG, player  "+currentPlayer.name+" !"
+                                                        //then we swap player
+                    swapPlayer()
+                }
+                else if(countClicks == 9){
+                                                        // we add message to our variable message us there and we say damn we have match null no one win 
+                    message.innerHTML  = "Ara~Ara Match null"
+                }
+                else{
+                                                        // we swap player each turn 
+                swapPlayer()
+                                                        //add massege for the turn 
+                message.innerHTML="The turn of " + currentPlayer.name
+                }
+
+            }
+        }
+                                                            // is the fuction who swap players for our bocle each turn
+        function swapPlayer() {
+            currentPlayer =(currentPlayer==player1) ? player2 :player1
+            currentPlayer.highlight()
+        }
+                                                            //is the fuction who let us know who win
+        function isVictory(){
+                                                            //variable for the 3 xxx or ooo named pattern
+                                                            //2 variable to the diagonal to see id the tow case :( / or \ ) for xxx or ooo
+            let pattern = currentPlayer.symbol.repeat(3)
+            let diag1="" , diag2=""
+                                                            // our unkel for for the ligne count from the ligne we have in the data 1-1,1-2,1-3 etc..
+            for (let l = 1; l <= 3; l++) {
+                                                            // 2 variable of install : one ligne and one colonne 
+                let ligne = "", col = ""
+                                                            // our unkel for for the ligne count from the collone we have the data 1-1,1-2,1-3 etc..
+               for (let c = 1; c <= 3; c++) {
+                                                            //2 variables we made we add in the variables each time we click look that ligne number one or that colonne from the ligne number 1 
+                    ligne+= document.querySelector("[data-coord='"+l+"-"+c+"']").textContent
+                    col+= document.querySelector("[data-coord='"+c+"-"+l+"']").textContent
+                                                            //diag1 = 1-1,2-2,3-3 -> l=c
+                                                            //diag2 = 1-3,2-2,3-1 -> l+c=4
+                    if(l==c) diag1+= document.querySelector("[data-coord='"+l+"-"+c+"']").textContent
+                    if(l+c==4) diag2+= document.querySelector("[data-coord='"+l+"-"+c+"']").textContent
+               }
+                                                            // condition from the variable pattern already explained it, it see's see's if our variable ligne or colonne has the same carictaire from our variable patern
+                if(ligne == pattern|| col == pattern) return true
+            }
+                                                            // condition from the variable pattern already explained it , it see's see's if our variable diago1 or diago2 has the same carictaire from our variable patern
+            if(diag1 == pattern|| diag2 == pattern) return true
+                                                            // its a replacment for the else from our main condtion it says give us false bay defult pls 
+            return false
+        }
+        
+    </script>
+</body>
+    
+</html>
